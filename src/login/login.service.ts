@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { compare } from "bcrypt";
 import { UsuarioService } from "src/usuario/usuario.service";
 
 @Injectable()
@@ -14,7 +15,7 @@ export class LoginService {
 	private async validaUsuario(email: string, senha: string) {
 		const usuario = await this.usuarioService.buscaUsuarioPorEmail(email)
 
-		if(usuario && senha === usuario.senha) {
+		if(usuario && await compare(senha, usuario.senha)) {
 			const {senha, ...resto} = usuario;
 
 			return resto
