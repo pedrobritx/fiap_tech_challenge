@@ -1,6 +1,6 @@
-    version: '3.9'
-    
-    services:
+version: '3.9'
+
+services:
       postgres:
         image: postgres:17
         environment:
@@ -16,9 +16,9 @@
           - postgres
         restart: unless-stopped
     
-    networks:
+networks:
       postgres:
         driver: bridge
     
-    volumes:
+volumes:
         postgres_data:
