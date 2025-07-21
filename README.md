@@ -1,66 +1,66 @@
 # FIAP Tech Challenge API
 
-This project is a simple RESTful API built with [NestJS](https://nestjs.com). It manages user accounts and provides an authentication flow using JSON Web Tokens (JWT).
+Este projeto é uma API RESTful simples construída com o [NestJS](https://nestjs.com). Ela gerencia contas de usuários e fornece um fluxo de autenticação usando JSON Web Tokens (JWT).
 
-## Purpose
+## Objetivo
 
-The API exposes a small set of endpoints to create users, authenticate and list them. It is meant to be a starting point for the FIAP Tech Challenge exercises and can be used as a reference for NestJS + TypeORM projects.
+A API expõe um pequeno conjunto de endpoints para criar usuários, autenticá-los e listá-los. Serve como ponto de partida para os exercícios do FIAP Tech Challenge e pode ser usada como referência para projetos NestJS + TypeORM.
 
-## Setup
+## Configuração
 
-### Requirements
+### Requisitos
 
-- Node.js and npm
-- Docker and Docker Compose (to run PostgreSQL)
+- Node.js e npm
+- Docker e Docker Compose (para executar o PostgreSQL)
 
-### Environment variables
+### Variáveis de ambiente
 
-Create a `.env` file based on `.env.example` and fill in the following variables:
+Crie um arquivo `.env` om base em `.env.example` e preencha as variáveis abaixo:
 
-- `DB_HOST` – database host
-- `DB_PORT` – database port
-- `DB_USERNAME` – database user
-- `DB_PASSWORD` – user password
-- `DB_NAME` – database name
-- `DB_ADMIN_EMAIL` – administrator e‑mail
-- `JWT_SECRET` – key used to sign JWT tokens (must match the secret expected by `AuthGuard`)
-- `APP_PORT` – port where the Nest application will listen
+- `DB_HOST` – host do banco de dados
+- `DB_PORT` – porta do banco de dados
+- `DB_USERNAME` – usuário do banco
+- `DB_PASSWORD` – senha do usuário
+- `DB_NAME` –  nome do banco
+- `DB_ADMIN_EMAIL` – e-mail do administrador
+- `JWT_SECRET` – chave usada para assinar os tokens JWT (deve corresponder ao segredo esperado pelo `AuthGuard`)
+- `APP_PORT` – porta em que a aplicação Nest ficará ouvindo
 
 ### Docker Compose
 
-A `docker-compose.yaml` is provided to start a local PostgreSQL instance. Run:
+Um arquivo `docker-compose.yaml` é fornecido para iniciar uma instância local do PostgreSQL. Execute:
 
 ```bash
 docker compose up -d postgres
 ```
 
-The Node application should be started separately with npm:
+A aplicação Node deve ser iniciada separadamente com npm:
 
 ```bash
 npm install
 npm run start:dev
 ```
 
-You can execute `npm run migration:run` before starting the app to create the database tables.
+Você pode executar `npm run migration:run` antes de iniciar a aplicação para criar as tabelas do banco.
 
-## Authentication flow
+## Fluxo de autenticação
 
-1. Create a user via `POST /usuarios` supplying `nome`, `email` and `senha`.
-2. Authenticate with `POST /login` using the same credentials. The endpoint returns a JWT token.
-3. Include the token in the `Authorization` header as `Bearer <token>` to access protected routes.
+1. Crie um usuário via `POST /usuarios` informando  `nome`, `email` and `senha`.
+2. Autentique-se com `POST /login` usando as mesmas credenciais. O endpoint retorna um token JWT.
+3. Inclua o token no cabeçalho `Authorization` como `Bearer <token>` para acessar rotas protegidas.
 
 ## Endpoints
 
-| Method | Path | Description |
+| Método | Caminho | Descrição |
 | ------ | ---- | ----------- |
-| `GET` | `/` | Health check, returns `Hello World!`. |
-| `POST` | `/login` | Returns a JWT token for valid credentials. |
-| `GET` | `/usuarios` | Lists users (requires authentication). |
-| `GET` | `/usuarios/:id` | Retrieves a user by ID. |
-| `POST` | `/usuarios` | Creates a user. |
-| `DELETE` | `/usuarios/:id` | Removes a user. |
+| `GET` | `/` | Verificação de saúde, retorna `Hello World!`. |
+| `POST` | `/login` | Retorna um token JWT para credenciais válidas. |
+| `GET` | `/usuarios` | 	Lista usuários (requer autenticação). |
+| `GET` | `/usuarios/:id` | Recupera um usuário pelo ID. |
+| `POST` | `/usuarios` | Cria um usuário. |
+| `DELETE` | `/usuarios/:id` | Remove um usuário. |
 
-All responses are in JSON.
+Todas as respostas estão em JSON.
 
 ## Running tests
 
