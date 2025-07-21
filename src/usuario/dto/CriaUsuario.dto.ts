@@ -3,7 +3,7 @@ import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
 export class CriaUsuarioDTO {
 
 	@IsNotEmpty({message: 'O nome não pode ser vazio'})
-	@MaxLength(100,{message: 'O nome deve ter nom máximo 100 caracteres'})
+	@MaxLength(100,{message: 'O nome deve ter no máximo 100 caracteres'})
 	nome: string;
 
 	@IsEmail(undefined, {message: 'O e-mail informado é inválido'})

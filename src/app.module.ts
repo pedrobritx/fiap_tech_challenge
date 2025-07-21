@@ -7,6 +7,7 @@ import { PostgresConfigService } from './config/postgres.config.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { LoginModule } from './login/login.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LoginModule } from './login/login.module';
 		}),
 		UsuarioModule,
 		LoginModule,
+		PostModule
   ],
   controllers: [AppController],
   providers: [AppService],
