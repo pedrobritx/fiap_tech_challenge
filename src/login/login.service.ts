@@ -30,7 +30,11 @@ export class LoginService {
 		if (!usuario) 
 			throw new UnauthorizedException('Credenciais inválidas');
 
-		const payload = {usuario: usuario.nome, sub: usuario.id};
+		const payload = {
+			usuario: usuario.nome, 
+			sub: usuario.id,
+			email: usuario.email
+		};
 
 		return {
 			token: this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET')}),
