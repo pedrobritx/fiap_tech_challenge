@@ -1,10 +1,11 @@
+
+import { PostEntity } from '../post/post.entity';
 import {
 	Column,
 	CreateDateColumn,
 	Entity,
-	Index,
+	OneToMany,
 	PrimaryGeneratedColumn,
-	Unique,
 	UpdateDateColumn
 } from 'typeorm';
 
@@ -27,4 +28,7 @@ export class UsuarioEntity {
 
 	@UpdateDateColumn({name: 'updated_at'})
 	updatedAt: string;
+
+	@OneToMany(() => PostEntity, (post) => post.usuario)
+	posts: PostEntity[]
 }
