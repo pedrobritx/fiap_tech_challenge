@@ -1,9 +1,18 @@
-export class ListPostsDTO {
+import { BaseResponseDto } from '../../common/dto/base-response.dto';
+
+export class ListPostsDTO extends BaseResponseDto {
+	readonly autor: string;
+	readonly titulo: string;
+
 	constructor(
-		readonly id: string,
-		readonly autor: string,
-		readonly titulo: string,
-		readonly createdAt: string,
-		readonly updatedAt: string
-	) {}
+		id: string,
+		autor: string,
+		titulo: string,
+		createdAt: Date,
+		updatedAt: Date
+	) {
+		super(id, createdAt, updatedAt);
+		this.autor = autor;
+		this.titulo = titulo;
+	}
 }

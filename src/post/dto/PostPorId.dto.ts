@@ -1,10 +1,21 @@
-export class PostPorIdDTO {
+import { BaseResponseDto } from '../../common/dto/base-response.dto';
+
+export class PostPorIdDTO extends BaseResponseDto {
+	readonly autor: string;
+	readonly titulo: string;
+	readonly conteudo: string;
+
 	constructor(
-		readonly id: string,
-		readonly autor: string,
-		readonly titulo: string,
-		readonly conteudo: string,
-		readonly createdAt: string,
-		readonly updatedAt: string
-	) {}
+		id: string,
+		autor: string,
+		titulo: string,
+		conteudo: string,
+		createdAt: Date,
+		updatedAt: Date
+	) {
+		super(id, createdAt, updatedAt);
+		this.autor = autor;
+		this.titulo = titulo;
+		this.conteudo = conteudo;
+	}
 }
