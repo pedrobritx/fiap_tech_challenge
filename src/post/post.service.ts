@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostEntity } from "./post.entity";
-import { Repository } from "typeorm";
+import { Repository, Like } from "typeorm";
 import { PostPorIdDTO } from "./dto/PostPorId.dto";
 import { UsuarioEntity } from "src/usuario/usuario.entity";
+import { CriaPostDTO } from "./dto/CriaPostDTO";
+import { EditaPostDTO } from "./dto/EditaPostDTO";
 
 @Injectable()
 export class PostService {
@@ -15,7 +17,7 @@ export class PostService {
 	) {}
 
 	async criaPost(post: PostEntity) {
-		const usuario = await this.usuarioRepository.findOneBy({id: post.id})
+		const usuario = await this.usuarioRepository.findOneBy({id: post.usuario.id})
 
 		if(!usuario) {
 			throw new NotFoundException('Usuario não encontrado')
@@ -57,5 +59,52 @@ export class PostService {
 		}
 
 		return post
+	}
+
+	async editaPost(postId: string, dadosPost: EditaPostDTO) {
+		const post = await this.postRepository.findOneBy({ id: postId })
+
+		if (!post) {
+			throw new NotFoundException('Post não encontrado')
+		}
+
+		if (dadosPost.titulo) {
+			post.titulo = dadosPost.titulo
+		}
+		
+		if (dadosPost.conteudo) {
+			post.conteudo = dadosPost.conteudo
+		}
+
+		return await this.postRepository.save(post)
+	}
+
+	async deletaPost(postId: string) {
+		const post = await this.postRepository.findOneBy({ id: postId })
+
+		if (!post) {
+			throw new NotFoundException('Post não encontrado')
+		}
+
+		await this.postRepository.remove(post)
+		return { message: 'Post deletado com sucesso' }
+	}
+
+	async buscaPosts(termo: string) {
+		if (!termo) {
+			return await this.listarPosts()
+		}
+
+		const posts = await this.postRepository.find({
+			where: [
+				{ titulo: Like(`%${termo}%`) },
+				{ conteudo: Like(`%${termo}%`) }
+			],
+			relations: {
+				usuario: true
+			}
+		})
+
+		return posts
 	}
 }
