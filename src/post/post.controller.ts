@@ -9,7 +9,7 @@ import { EditaPostDTO } from "./dto/EditaPostDTO";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Posts')
-@Controller('/post')
+@Controller('/posts')
 export class PostController {
 
 	constructor(
