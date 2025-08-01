@@ -88,12 +88,12 @@ docker compose logs app -f
 ### Posts (Blog)
 | Método | Caminho | Descrição |
 | ------ | ---- | ----------- |
-| `GET` | `/post` | Lista todos os posts disponíveis. |
-| `GET` | `/post/search?q=termo` | Busca posts por palavra-chave no título ou conteúdo. |
-| `GET` | `/post/:id` | Recupera um post específico pelo ID. |
-| `POST` | `/post` | Cria um novo post (requer autenticação). |
-| `PUT` | `/post/:id` | Edita um post existente (requer autenticação). |
-| `DELETE` | `/post/:id` | Remove um post (requer autenticação). |
+| `GET` | `/posts` | Lista todos os posts disponíveis. |
+| `GET` | `/posts/search?q=termo` | Busca posts por palavra-chave no título ou conteúdo. |
+| `GET` | `/posts/:id` | Recupera um post específico pelo ID. |
+| `POST` | `/posts` | Cria um novo post (requer autenticação). |
+| `PUT` | `/posts/:id` | Edita um post existente (requer autenticação). |
+| `DELETE` | `/posts/:id` | Remove um post (requer autenticação). |
 
 Todas as respostas estão em JSON.
 
@@ -130,14 +130,44 @@ O projeto utiliza GitHub Actions para automação:
 
 ## Tecnologias Utilizadas
 
-- **Backend**: Node.js com NestJS
+- **Backend**: Node.js com NestJS (substitui Express com recursos superiores)
 - **Banco de Dados**: PostgreSQL
 - **ORM**: TypeORM
 - **Autenticação**: JWT
 - **Containerização**: Docker & Docker Compose
 - **Testes**: Jest
 - **CI/CD**: GitHub Actions
+- **Documentação**: Swagger/OpenAPI
 - **Validação**: class-validator
 - **Transformação**: class-transformer
+
+## Arquitetura da Aplicação
+
+### Arquitetura em Camadas:
+```
+┌─────────────────────────────────────┐
+│           PRESENTATION              │
+│     Controllers + DTOs + Pipes      │
+├─────────────────────────────────────┤
+│            BUSINESS                 │
+│       Services + Guards             │
+├─────────────────────────────────────┤
+│         PERSISTENCE                 │
+│     Entities + TypeORM + DB         │
+└─────────────────────────────────────┘
+```
+
+### Módulos Principais:
+- **PostModule**: Gerenciamento de postagens
+- **UsuarioModule**: Gerenciamento de usuários  
+- **LoginModule**: Autenticação JWT
+- **Common**: Filtros, pipes e interceptors compartilhados
+
+### Padrões Implementados:
+- **Exception Filters**: Tratamento global de erros
+- **Validation Pipes**: Validação automática de entrada
+- **Guards**: Proteção de rotas com JWT
+- **Interceptors**: Logs e transformação de responses
+- **DTOs**: Transferência segura de dados
 
 
