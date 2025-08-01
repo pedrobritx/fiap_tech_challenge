@@ -63,6 +63,21 @@ npm run migration:generate -- src/db/migrations/NomeDaMigracao
 docker compose logs app -f
 ```
 
+### 📖 Documentação da API (Swagger)
+
+Após iniciar a aplicação, acesse a documentação interativa da API:
+
+```
+http://localhost:3000/api
+```
+
+A documentação Swagger oferece:
+- **Interface interativa** para testar todos os endpoints
+- **Esquemas de dados** com exemplos realistas
+- **Autenticação JWT** integrada
+- **Respostas detalhadas** com códigos de status
+- **Validações automáticas** dos dados de entrada
+
 ## Fluxo de autenticação
 
 1. Crie um usuário via `POST /usuarios` informando  `nome`, `email` and `senha`.
