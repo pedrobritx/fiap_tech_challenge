@@ -5,6 +5,8 @@ import { PostEntity } from './post.entity';
 import { UsuarioEntity } from '../usuario/usuario.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { NotFoundException } from '@nestjs/common';
+import { CriaPostDTO } from './dto/CriaPostDTO';
+import { EditaPostDTO } from './dto/EditaPostDTO';
 
 describe('PostService', () => {
   let service: PostService;
@@ -60,28 +62,32 @@ describe('PostService', () => {
 
   describe('criaPost', () => {
     it('should create a post successfully', async () => {
-      const postEntity = new PostEntity();
-      postEntity.titulo = 'Test Post';
-      postEntity.conteudo = 'Test Content';
-      postEntity.usuario = mockUsuario as UsuarioEntity;
+      const criaPostDto: CriaPostDTO = {
+        usuarioId: '1',
+        titulo: 'Test Post',
+        conteudo: 'Test Content'
+      };
 
       jest.spyOn(usuarioRepository, 'findOneBy').mockResolvedValue(mockUsuario as UsuarioEntity);
       jest.spyOn(postRepository, 'save').mockResolvedValue(mockPost as PostEntity);
 
-      const result = await service.criaPost(postEntity);
+      const result = await service.criaPost(criaPostDto);
 
-      expect(usuarioRepository.findOneBy).toHaveBeenCalledWith({ id: mockUsuario.id });
+      expect(usuarioRepository.findOneBy).toHaveBeenCalledWith({ id: criaPostDto.usuarioId });
       expect(postRepository.save).toHaveBeenCalled();
       expect(result).toEqual(mockPost);
     });
 
     it('should throw NotFoundException when user not found', async () => {
-      const postEntity = new PostEntity();
-      postEntity.usuario = { id: '999' } as UsuarioEntity;
+      const criaPostDto: CriaPostDTO = {
+        usuarioId: '999',
+        titulo: 'Test Post',
+        conteudo: 'Test Content'
+      };
 
       jest.spyOn(usuarioRepository, 'findOneBy').mockResolvedValue(null);
 
-      await expect(service.criaPost(postEntity)).rejects.toThrow(NotFoundException);
+      await expect(service.criaPost(criaPostDto)).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -121,13 +127,13 @@ describe('PostService', () => {
 
   describe('editaPost', () => {
     it('should update a post successfully', async () => {
-      const dadosPost = { titulo: 'Updated Title', conteudo: 'Updated Content' };
-      const updatedPost = { ...mockPost, ...dadosPost };
+      const editaPostDto: EditaPostDTO = { titulo: 'Updated Title', conteudo: 'Updated Content' };
+      const updatedPost = { ...mockPost, ...editaPostDto };
 
       jest.spyOn(postRepository, 'findOneBy').mockResolvedValue(mockPost as PostEntity);
       jest.spyOn(postRepository, 'save').mockResolvedValue(updatedPost as PostEntity);
 
-      const result = await service.editaPost('1', dadosPost);
+      const result = await service.editaPost('1', editaPostDto);
 
       expect(postRepository.findOneBy).toHaveBeenCalledWith({ id: '1' });
       expect(postRepository.save).toHaveBeenCalled();
@@ -135,9 +141,10 @@ describe('PostService', () => {
     });
 
     it('should throw NotFoundException when post not found', async () => {
+      const editaPostDto: EditaPostDTO = { titulo: 'Test' };
       jest.spyOn(postRepository, 'findOneBy').mockResolvedValue(null);
 
-      await expect(service.editaPost('999', { titulo: 'Test' })).rejects.toThrow(NotFoundException);
+      await expect(service.editaPost('999', editaPostDto)).rejects.toThrow(NotFoundException);
     });
   });
 
