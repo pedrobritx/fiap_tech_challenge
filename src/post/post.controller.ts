@@ -44,6 +44,9 @@ export class PostController {
 	}
 
 	@Get('search')
+	@ApiOperation({ summary: 'Buscar posts por palavra-chave' })
+	@ApiResponse({ status: 200, description: 'Posts encontrados', type: [ListPostsDTO] })
+	@ApiResponse({ status: 400, description: 'Termo de busca inválido' })
 	async buscaPosts(@Query('q') termo: string) {
 		if (termo && termo.trim().length < 2) {
 			throw new HttpException(
@@ -64,6 +67,10 @@ export class PostController {
 	}
 
 	@Get(':postId')
+	@ApiOperation({ summary: 'Obter detalhes de um post' })
+	@ApiResponse({ status: 200, description: 'Post encontrado', type: PostPorIdDTO })
+	@ApiResponse({ status: 400, description: 'ID inválido' })
+	@ApiResponse({ status: 404, description: 'Post não encontrado' })
 	async getPostById(@Param('postId', UuidValidationPipe) postId: string) {
 		const post = await this.postService.getPostById(postId)
 
@@ -78,7 +85,13 @@ export class PostController {
 	}
 
 	@UseGuards(AuthGuard)
+	@ApiBearerAuth('access-token')
 	@Put(':postId')
+	@ApiOperation({ summary: 'Editar um post existente' })
+	@ApiResponse({ status: 200, description: 'Post atualizado com sucesso', type: PostPorIdDTO })
+	@ApiResponse({ status: 400, description: 'Dados inválidos' })
+	@ApiResponse({ status: 401, description: 'Token de acesso inválido' })
+	@ApiResponse({ status: 404, description: 'Post não encontrado' })
 	async editaPost(
 		@Param('postId', UuidValidationPipe) postId: string,
 		@Body() dadosPost: EditaPostDTO
@@ -88,7 +101,13 @@ export class PostController {
 	}
 
 	@UseGuards(AuthGuard)
+	@ApiBearerAuth('access-token')
 	@Delete(':postId')
+	@ApiOperation({ summary: 'Excluir um post' })
+	@ApiResponse({ status: 200, description: 'Post excluído com sucesso' })
+	@ApiResponse({ status: 400, description: 'ID inválido' })
+	@ApiResponse({ status: 401, description: 'Token de acesso inválido' })
+	@ApiResponse({ status: 404, description: 'Post não encontrado' })
 	async deletaPost(@Param('postId', UuidValidationPipe) postId: string) {
 		return await this.postService.deletaPost(postId)
 	}
