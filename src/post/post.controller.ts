@@ -1,12 +1,14 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { UuidValidationPipe } from "../common/pipes/uuid-validation.pipe";
 import { PostService } from "./post.service";
 import { ListPostsDTO } from "./dto/ListaPosts.dto";
 import { CriaPostDTO } from "./dto/CriaPostDTO";
-import { PostEntity } from "./post.entity";
 import { AuthGuard } from "src/guards/auth.guard";
 import { PostPorIdDTO } from "./dto/PostPorId.dto";
 import { EditaPostDTO } from "./dto/EditaPostDTO";
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Posts')
 @Controller('/post')
 export class PostController {
 
@@ -15,19 +17,20 @@ export class PostController {
 	) {}
 
 	@UseGuards(AuthGuard)
+	@ApiBearerAuth('access-token')
 	@Post()
+	@ApiOperation({ summary: 'Criar um novo post' })
+	@ApiResponse({ status: 201, description: 'Post criado com sucesso' })
+	@ApiResponse({ status: 400, description: 'Dados inválidos' })
 	async criaPost(
 		@Body() dadosPost: CriaPostDTO
 	) {
-		const novoPost = new PostEntity();
-		novoPost.usuario = dadosPost.usuario;
-		novoPost.titulo = dadosPost.titulo;
-		novoPost.conteudo = dadosPost.conteudo;
-
-		return await this.postService.criaPost(novoPost)
+		return await this.postService.criaPost(dadosPost)
 	}
 
 	@Get()
+	@ApiOperation({ summary: 'Listar todos os posts' })
+	@ApiResponse({ status: 200, description: 'Lista de posts retornada com sucesso', type: [ListPostsDTO] })
 	async listaPosts() {
 		const posts = await this.postService.listarPosts()
 
@@ -61,7 +64,7 @@ export class PostController {
 	}
 
 	@Get(':postId')
-	async getPostById(@Param('postId') postId: string) {
+	async getPostById(@Param('postId', UuidValidationPipe) postId: string) {
 		const post = await this.postService.getPostById(postId)
 
 		return new PostPorIdDTO(
@@ -77,7 +80,7 @@ export class PostController {
 	@UseGuards(AuthGuard)
 	@Put(':postId')
 	async editaPost(
-		@Param('postId') postId: string,
+		@Param('postId', UuidValidationPipe) postId: string,
 		@Body() dadosPost: EditaPostDTO
 	) {
 		const post = await this.postService.editaPost(postId, dadosPost)
@@ -86,7 +89,7 @@ export class PostController {
 
 	@UseGuards(AuthGuard)
 	@Delete(':postId')
-	async deletaPost(@Param('postId') postId: string) {
+	async deletaPost(@Param('postId', UuidValidationPipe) postId: string) {
 		return await this.postService.deletaPost(postId)
 	}
 }

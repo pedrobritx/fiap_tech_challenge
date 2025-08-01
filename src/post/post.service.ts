@@ -16,8 +16,8 @@ export class PostService {
 		private readonly usuarioRepository: Repository<UsuarioEntity>
 	) {}
 
-	async criaPost(post: PostEntity) {
-		const usuario = await this.usuarioRepository.findOneBy({id: post.usuario.id})
+	async criaPost(dadosPost: CriaPostDTO) {
+		const usuario = await this.usuarioRepository.findOneBy({id: dadosPost.usuarioId})
 
 		if(!usuario) {
 			throw new NotFoundException('Usuario não encontrado')
@@ -25,8 +25,8 @@ export class PostService {
 		}
 
 		const postEntity = new PostEntity()
-		postEntity.titulo = post.titulo
-		postEntity.conteudo = post.conteudo
+		postEntity.titulo = dadosPost.titulo
+		postEntity.conteudo = dadosPost.conteudo
 		postEntity.usuario = usuario
 
 		const postCriado = await this.postRepository.save(postEntity)
