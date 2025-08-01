@@ -28,20 +28,40 @@ Crie um arquivo `.env` om base em `.env.example` e preencha as variáveis abaixo
 
 ### Docker Compose
 
-Um arquivo `docker-compose.yaml` é fornecido para iniciar uma instância local do PostgreSQL. Execute:
+Um arquivo `docker-compose.yaml` é fornecido para executar toda a aplicação com Docker:
 
+**Opção 1: Executar apenas o banco PostgreSQL**
 ```bash
 docker compose up -d postgres
 ```
 
-A aplicação Node deve ser iniciada separadamente com npm:
-
+Depois execute a aplicação localmente:
 ```bash
 npm install
+npm run migration:run
 npm run start:dev
 ```
 
-Você pode executar `npm run migration:run` antes de iniciar a aplicação para criar as tabelas do banco.
+**Opção 2: Executar aplicação completa com Docker**
+```bash
+# Copie o arquivo de exemplo e configure as variáveis
+cp .env.example .env
+
+# Execute toda a aplicação
+docker compose up -d
+```
+
+**Comandos úteis:**
+```bash
+# Executar migrações
+npm run migration:run
+
+# Gerar nova migração
+npm run migration:generate -- src/db/migrations/NomeDaMigracao
+
+# Ver logs da aplicação
+docker compose logs app -f
+```
 
 ## Fluxo de autenticação
 
@@ -51,21 +71,73 @@ Você pode executar `npm run migration:run` antes de iniciar a aplicação para 
 
 ## Endpoints
 
+### Autenticação
 | Método | Caminho | Descrição |
 | ------ | ---- | ----------- |
 | `GET` | `/` | Verificação de saúde, retorna `Hello World!`. |
 | `POST` | `/login` | Retorna um token JWT para credenciais válidas. |
-| `GET` | `/usuarios` | 	Lista usuários (requer autenticação). |
+
+### Usuários
+| Método | Caminho | Descrição |
+| ------ | ---- | ----------- |
+| `GET` | `/usuarios` | Lista usuários (requer autenticação). |
 | `GET` | `/usuarios/:id` | Recupera um usuário pelo ID. |
 | `POST` | `/usuarios` | Cria um usuário. |
 | `DELETE` | `/usuarios/:id` | Remove um usuário. |
 
+### Posts (Blog)
+| Método | Caminho | Descrição |
+| ------ | ---- | ----------- |
+| `GET` | `/post` | Lista todos os posts disponíveis. |
+| `GET` | `/post/search?q=termo` | Busca posts por palavra-chave no título ou conteúdo. |
+| `GET` | `/post/:id` | Recupera um post específico pelo ID. |
+| `POST` | `/post` | Cria um novo post (requer autenticação). |
+| `PUT` | `/post/:id` | Edita um post existente (requer autenticação). |
+| `DELETE` | `/post/:id` | Remove um post (requer autenticação). |
+
 Todas as respostas estão em JSON.
 
-## Running tests
+## Testes
+
+O projeto inclui testes unitários para garantir a qualidade do código:
 
 ```bash
+# Executar testes unitários
 npm run test
+
+# Executar com cobertura
+npm run test:cov
+
+# Executar testes e2e
+npm run test:e2e
+
+# Executar testes em modo watch
+npm run test:watch
 ```
+
+### Cobertura de Testes
+O projeto mantém cobertura mínima de 20% conforme requisitos do Tech Challenge.
+
+## CI/CD
+
+O projeto utiliza GitHub Actions para automação:
+
+- **Testes automáticos** em cada push/PR
+- **Linting** e verificação de código
+- **Build** da aplicação
+- **Cobertura de testes** com relatórios
+- **Deploy automatizado** (configurável)
+
+## Tecnologias Utilizadas
+
+- **Backend**: Node.js com NestJS
+- **Banco de Dados**: PostgreSQL
+- **ORM**: TypeORM
+- **Autenticação**: JWT
+- **Containerização**: Docker & Docker Compose
+- **Testes**: Jest
+- **CI/CD**: GitHub Actions
+- **Validação**: class-validator
+- **Transformação**: class-transformer
 
 
