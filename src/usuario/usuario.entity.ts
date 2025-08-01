@@ -24,10 +24,10 @@ export class UsuarioEntity {
 	email: string;
 
 	@CreateDateColumn({name: 'created_at'})
-	createdAt: string;
+	createdAt: Date;
 
 	@UpdateDateColumn({name: 'updated_at'})
-	updatedAt: string;
+	updatedAt: Date;
 
 	@OneToMany(() => PostEntity, (post) => post.usuario)
 	posts: PostEntity[]

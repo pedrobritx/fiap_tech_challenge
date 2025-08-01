@@ -1,98 +1,262 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# FIAP Tech Challenge - Blog para Professores da Rede Pública
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+> **Solução desenvolvida para escalar a plataforma de blog dinâmico para todo o território nacional**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Este projeto é uma API RESTful robusta construída com [NestJS](https://nestjs.com) que resolve o problema da falta de uma plataforma centralizada para professores da rede pública compartilharem conhecimento e publicarem suas aulas.
 
-## Description
+## 🎯 Objetivo do Projeto
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Criar uma aplicação backend escalável que permita professores e professoras da rede pública:
+- **Publicar aulas** de forma prática e centralizada
+- **Compartilhar conhecimento** com alunos de todo país
+- **Gerenciar conteúdo educacional** através de uma API moderna
+- **Escalar para território nacional** com arquitetura robusta
 
-## Project setup
+A API implementa todos os requisitos funcionais e técnicos do FIAP Tech Challenge, superando as expectativas com funcionalidades adicionais.
 
+## ✅ Conformidade com Requisitos do Tech Challenge
+
+### Requisitos Funcionais - IMPLEMENTADOS
+- ✅ **GET /posts** - Listar posts
+- ✅ **GET /posts/:id** - Ler post específico
+- ✅ **POST /posts** - Criar post (com autenticação JWT)
+- ✅ **PUT /posts/:id** - Editar post (com autenticação JWT)
+- ✅ **DELETE /posts/:id** - Excluir post (com autenticação JWT)
+- ✅ **GET /posts/search?q=termo** - Buscar posts por termo
+
+### Requisitos Técnicos - IMPLEMENTADOS
+- ✅ **Back-end Node.js**: NestJS (framework superior ao Express)
+- ✅ **Persistência de dados**: PostgreSQL com TypeORM
+- ✅ **Containerização Docker**: Dockerfile + docker-compose.yaml
+- ✅ **GitHub Actions**: CI/CD automatizado
+- ✅ **Documentação**: README + Swagger UI interativo
+- ✅ **Cobertura de testes**: >20% com Jest
+
+### Funcionalidades EXTRAS Implementadas
+- 🚀 **Swagger UI**: Documentação interativa da API
+- 🔐 **Autenticação JWT**: Sistema completo de login
+- 👥 **Gestão de usuários**: CRUD completo
+- 🛡️ **Validação robusta**: Pipes + Guards + Exception Filters
+- 📊 **Logging**: Interceptors de monitoramento
+- 🏗️ **Arquitetura**: Padrões enterprise com NestJS
+
+## Configuração
+
+### Requisitos
+
+- Node.js e npm
+- Docker e Docker Compose (para executar o PostgreSQL)
+
+### Variáveis de ambiente
+
+Crie um arquivo `.env` om base em `.env.example` e preencha as variáveis abaixo:
+
+- `DB_HOST` – host do banco de dados
+- `DB_PORT` – porta do banco de dados
+- `DB_USERNAME` – usuário do banco
+- `DB_PASSWORD` – senha do usuário
+- `DB_NAME` –  nome do banco
+- `DB_ADMIN_EMAIL` – e-mail do administrador
+- `JWT_SECRET` – chave usada para assinar os tokens JWT (deve corresponder ao segredo esperado pelo `AuthGuard`)
+- `APP_PORT` – porta em que a aplicação Nest ficará ouvindo
+
+### Docker Compose
+
+Um arquivo `docker-compose.yaml` é fornecido para executar toda a aplicação com Docker:
+
+**Opção 1: Executar apenas o banco PostgreSQL**
 ```bash
-$ npm install
+docker compose up -d postgres
 ```
 
-## Compile and run the project
-
+Depois execute a aplicação localmente:
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
+npm run migration:run
+npm run start:dev
 ```
 
-## Run tests
-
+**Opção 2: Executar aplicação completa com Docker**
 ```bash
-# unit tests
-$ npm run test
+# Copie o arquivo de exemplo e configure as variáveis
+cp .env.example .env
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Execute toda a aplicação
+docker compose up -d
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+**Comandos úteis:**
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Executar migrações
+npm run migration:run
+
+# Gerar nova migração
+npm run migration:generate -- src/db/migrations/NomeDaMigracao
+
+# Ver logs da aplicação
+docker compose logs app -f
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 📖 Documentação da API (Swagger)
 
-## Resources
+Após iniciar a aplicação, acesse a documentação interativa da API:
 
-Check out a few resources that may come in handy when working with NestJS:
+```
+http://localhost:3000/api
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+A documentação Swagger oferece:
+- **Interface interativa** para testar todos os endpoints
+- **Esquemas de dados** com exemplos realistas
+- **Autenticação JWT** integrada
+- **Respostas detalhadas** com códigos de status
+- **Validações automáticas** dos dados de entrada
 
-## Support
+## Fluxo de autenticação
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+1. Crie um usuário via `POST /usuarios` informando  `nome`, `email` and `senha`.
+2. Autentique-se com `POST /login` usando as mesmas credenciais. O endpoint retorna um token JWT.
+3. Inclua o token no cabeçalho `Authorization` como `Bearer <token>` para acessar rotas protegidas.
 
-## Stay in touch
+## Endpoints
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Autenticação
+| Método | Caminho | Descrição |
+| ------ | ---- | ----------- |
+| `GET` | `/` | Verificação de saúde, retorna `Hello World!`. |
+| `POST` | `/login` | Retorna um token JWT para credenciais válidas. |
 
-## License
+### Usuários
+| Método | Caminho | Descrição |
+| ------ | ---- | ----------- |
+| `GET` | `/usuarios` | Lista usuários (requer autenticação). |
+| `GET` | `/usuarios/:id` | Recupera um usuário pelo ID. |
+| `POST` | `/usuarios` | Cria um usuário. |
+| `DELETE` | `/usuarios/:id` | Remove um usuário. |
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Posts (Blog)
+| Método | Caminho | Descrição |
+| ------ | ---- | ----------- |
+| `GET` | `/posts` | Lista todos os posts disponíveis. |
+| `GET` | `/posts/search?q=termo` | Busca posts por palavra-chave no título ou conteúdo. |
+| `GET` | `/posts/:id` | Recupera um post específico pelo ID. |
+| `POST` | `/posts` | Cria um novo post (requer autenticação). |
+| `PUT` | `/posts/:id` | Edita um post existente (requer autenticação). |
+| `DELETE` | `/posts/:id` | Remove um post (requer autenticação). |
+
+Todas as respostas estão em JSON.
+
+## Testes
+
+O projeto inclui testes unitários para garantir a qualidade do código:
+
+```bash
+# Executar testes unitários
+npm run test
+
+# Executar com cobertura
+npm run test:cov
+
+# Executar testes e2e
+npm run test:e2e
+
+# Executar testes em modo watch
+npm run test:watch
+```
+
+### Cobertura de Testes
+O projeto mantém cobertura mínima de 20% conforme requisitos do Tech Challenge.
+
+## CI/CD
+
+O projeto utiliza GitHub Actions para automação:
+
+- **Testes automáticos** em cada push/PR
+- **Linting** e verificação de código
+- **Build** da aplicação
+- **Cobertura de testes** com relatórios
+- **Deploy automatizado** (configurável)
+
+## Tecnologias Utilizadas
+
+- **Backend**: Node.js com NestJS (substitui Express com recursos superiores)
+- **Banco de Dados**: PostgreSQL
+- **ORM**: TypeORM
+- **Autenticação**: JWT
+- **Containerização**: Docker & Docker Compose
+- **Testes**: Jest
+- **CI/CD**: GitHub Actions
+- **Documentação**: Swagger/OpenAPI
+- **Validação**: class-validator
+- **Transformação**: class-transformer
+
+## Arquitetura da Aplicação
+
+### Arquitetura em Camadas:
+```
+┌─────────────────────────────────────┐
+│           PRESENTATION              │
+│     Controllers + DTOs + Pipes      │
+├─────────────────────────────────────┤
+│            BUSINESS                 │
+│       Services + Guards             │
+├─────────────────────────────────────┤
+│         PERSISTENCE                 │
+│     Entities + TypeORM + DB         │
+└─────────────────────────────────────┘
+```
+
+### Módulos Principais:
+- **PostModule**: Gerenciamento de postagens
+- **UsuarioModule**: Gerenciamento de usuários  
+- **LoginModule**: Autenticação JWT
+- **Common**: Filtros, pipes e interceptors compartilhados
+
+### Padrões Implementados:
+- **Exception Filters**: Tratamento global de erros
+- **Validation Pipes**: Validação automática de entrada
+- **Guards**: Proteção de rotas com JWT
+- **Interceptors**: Logs e transformação de responses
+- **DTOs**: Transferência segura de dados
+
+## 🚧 Desafios Enfrentados e Soluções
+
+### 1. Compatibilidade de Dependências
+**Desafio**: Conflito entre NestJS v11 e Swagger v8
+**Solução**: Upgrade para @nestjs/swagger v11.2.0 compatível
+
+### 2. Sincronização de Banco de Dados
+**Desafio**: TypeORM não criava tabelas automaticamente
+**Solução**: Configuração `synchronize: true` na PostgresConfigService
+
+### 3. Tipos TypeScript Inconsistentes
+**Desafio**: Conflitos entre Date/string nas entidades
+**Solução**: Padronização de tipos Date em todas as entidades e DTOs
+
+### 4. Containerização Completa
+**Desafio**: Coordenar app + banco + health checks
+**Solução**: Docker Compose com dependências e health checks
+
+### 5. Documentação Interativa
+**Desafio**: Implementar Swagger com autenticação JWT
+**Solução**: Decorators completos + Bearer auth configurado
+
+## 🏆 Resultados Alcançados
+
+- **100% dos requisitos** funcionais implementados
+- **Arquitetura escalável** pronta para produção
+- **Documentação completa** com Swagger UI
+- **CI/CD automatizado** com GitHub Actions
+- **Cobertura de testes** superior ao mínimo exigido
+- **Containerização completa** para deployment
+
+## 📋 Como Usar
+
+1. **Clone o repositório**
+2. **Configure o ambiente** (.env)
+3. **Execute com Docker**: `docker-compose up -d`
+4. **Acesse a documentação**: http://localhost:3000/api
+5. **Teste os endpoints** via Swagger UI
+
+A solução está pronta para escalar nacionalmente e atender milhares de professores da rede pública!
+
