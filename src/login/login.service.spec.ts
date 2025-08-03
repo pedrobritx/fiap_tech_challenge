@@ -38,6 +38,12 @@ describe('LoginService', () => {
             sign: jest.fn(),
           },
         },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue('test-secret'),
+          },
+        },
       ],
     }).compile();
 
@@ -68,7 +74,7 @@ describe('LoginService', () => {
         sub: mockUsuario.id,
         email: mockUsuario.email,
       },
-	  {secret: undefined });
+	  {secret: 'test-secret' });
       expect(result.token).toEqual(mockToken.access_token);
     });
 
