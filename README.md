@@ -57,6 +57,7 @@ Crie um arquivo `.env` om base em `.env.example` e preencha as variáveis abaixo
 - `DB_PASSWORD` – senha do usuário
 - `DB_NAME` –  nome do banco
 - `DB_ADMIN_EMAIL` – e-mail do administrador
+- `DB_SSL` – indica se irá utilizar configuração SSL na conexão com o banco
 - `JWT_SECRET` – chave usada para assinar os tokens JWT (deve corresponder ao segredo esperado pelo `AuthGuard`)
 - `APP_PORT` – porta em que a aplicação Nest ficará ouvindo
 
