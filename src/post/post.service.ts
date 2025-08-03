@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostEntity } from "./post.entity";
 import { Repository, Like } from "typeorm";
-import { PostPorIdDTO } from "./dto/PostPorId.dto";
-import { UsuarioEntity } from "src/usuario/usuario.entity";
+import { UsuarioEntity } from "../usuario/usuario.entity";
 import { CriaPostDTO } from "./dto/CriaPostDTO";
 import { EditaPostDTO } from "./dto/EditaPostDTO";
 
