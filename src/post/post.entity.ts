@@ -1,23 +1,30 @@
-import { UsuarioEntity } from "../usuario/usuario.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { UsuarioEntity } from '../usuario/usuario.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity({name: 'posts'})
+@Entity({ name: 'posts' })
 export class PostEntity {
-	@PrimaryGeneratedColumn('uuid')
-	id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-	@Column({name: 'titulo', length: 100, nullable: false})
-	titulo: string;
+  @Column({ name: 'titulo', length: 100, nullable: false })
+  titulo: string;
 
-	@Column({name: 'conteudo', type: 'text', nullable: false})
-	conteudo: string;
+  @Column({ name: 'conteudo', type: 'text', nullable: false })
+  conteudo: string;
 
-	@CreateDateColumn({name: 'created_at'})
-	createdAt: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
-	@UpdateDateColumn({name: 'updated_at'})
-	updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 
-	@ManyToOne(() => UsuarioEntity,(usuario) => usuario.posts)
-	usuario: UsuarioEntity
+  @ManyToOne(() => UsuarioEntity, (usuario) => usuario.posts)
+  usuario: UsuarioEntity;
 }

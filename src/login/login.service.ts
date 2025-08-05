@@ -1,45 +1,49 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
-import { compare } from "bcrypt";
-import { UsuarioService } from "../usuario/usuario.service";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { compare } from 'bcrypt';
+import { UsuarioService } from '../usuario/usuario.service';
 
 @Injectable()
 export class LoginService {
-	constructor(
-		private usuarioService: UsuarioService,
-		private jwtService: JwtService,
-		private configService: ConfigService
-	) {}
+  constructor(
+    private usuarioService: UsuarioService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
 
-	private async validaUsuario(email: string, senha: string) {
-		const usuario = await this.usuarioService.buscaUsuarioPorEmail(email)
+  private async validaUsuario(email: string, senha: string) {
+    const usuario = await this.usuarioService.buscaUsuarioPorEmail(email);
 
-		if(usuario && await compare(senha, usuario.senha)) {
-			const {senha, ...resto} = usuario;
+    if (usuario && (await compare(senha, usuario.senha))) {
+      const { senha, ...resto } = usuario;
 
-			return resto
-		}
+      return resto;
+    }
 
-		return null
-	}
+    return null;
+  }
 
-	async login(email: string, senha: string) {
-		const usuario = await this.validaUsuario(email, senha);
+  async login(email: string, senha: string) {
+    const usuario = await this.validaUsuario(email, senha);
 
-		if (!usuario) 
-			throw new UnauthorizedException('Credenciais inválidas');
+    if (!usuario) throw new UnauthorizedException('Credenciais inválidas');
 
-		const payload = {
-			usuario: usuario.nome, 
-			sub: usuario.id,
-			email: usuario.email
-		};
+    const payload = {
+      usuario: usuario.nome,
+      sub: usuario.id,
+      email: usuario.email,
+    };
 
-		return {
-			token: this.jwtService.sign(payload,{secret: this.configService.get<string>('JWT_SECRET')}),
-			usuario
-		}
-		
-	}
+    return {
+      token: this.jwtService.sign(payload, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      }),
+      usuario,
+    };
+  }
 }

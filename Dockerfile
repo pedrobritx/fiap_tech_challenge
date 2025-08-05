@@ -1,7 +1,10 @@
 # Build stage
-FROM node:20-alpine AS builder
+FROM node:20-alpine3.19 AS builder
 
 WORKDIR /app
+
+# Update Alpine packages to latest security patches
+RUN apk update && apk upgrade
 
 # Copy package files
 COPY package*.json ./
@@ -12,40 +15,20 @@ RUN npm ci --legacy-peer-deps && npm cache clean --force
 # Copy source code
 COPY . .
 
-ARG DB_HOST
-ARG DB_PORT
-ARG DB_USERNAME
-ARG DB_PASSWORD
-ARG DB_NAME
-ARG DB_SSL
-ARG JWT_SECRET
-
-ENV DB_HOST=$DB_HOST
-ENV DB_PORT=$DB_PORT
-ENV DB_USERNAME=$DB_USERNAME
-ENV DB_PASSWORD=$DB_PASSWORD
-ENV DB_NAME=$DB_NAME
-ENV DB_SSL=$DB_SSL
-ENV JWT_SECRET=$JWT_SECRET
-
-RUN echo "DB_HOST=${DB_HOST}" > .env
-RUN echo "DB_PORT=${DB_PORT}" > .env
-RUN echo "DB_USERNAME=${DB_USERNAME}" > .env
-RUN echo "DB_PASSWORD=${DB_PASSWORD}" > .env
-RUN echo "DB_NAME=${DB_NAME}" > .env
-RUN echo "DB_SSL=${DB_SSL}" > .env
-RUN echo "JWT_SECRET=${JWT_SECRET}" > .env
+# Runtime environment variables are supplied by docker-compose (.env)
 
 # Build the application
 RUN npm run build
+# Apply pending migrations during the build so the image starts ready.
+RUN npx typeorm-ts-node-commonjs migration:run -d dist/src/db/data-source-cli.js
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:20-alpine3.19 AS production
 
 WORKDIR /app
 
-# Install dumb-init for proper signal handling
-RUN apk add --no-cache dumb-init
+# Install dumb-init for proper signal handling and update all packages
+RUN apk update && apk upgrade && apk add --no-cache dumb-init
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs
@@ -72,4 +55,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # Start the application
 ENTRYPOINT ["dumb-init", "--"]
-CMD npm run typeorm migration:run -- -d dist/db/data-source-cli.js && node dist/main.js
+CMD ["node", "dist/main.js"]

@@ -10,14 +10,14 @@ async function bootstrap() {
 
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
-  
+
   app.useGlobalPipes(
-	new ValidationPipe({
-		transform: true,
-		whitelist: true,
-		forbidNonWhitelisted: true
-	})
-  )
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   // Swagger Configuration
   const config = new DocumentBuilder()
@@ -33,13 +33,14 @@ async function bootstrap() {
       'access-token',
     )
     .build();
-  
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 
-  console.log(`Serviço iniciado na porta ${app.getHttpServer().address().port} 🚀`)
-
+  console.log(
+    `Serviço iniciado na porta ${app.getHttpServer().address().port} 🚀`,
+  );
 }
 bootstrap();

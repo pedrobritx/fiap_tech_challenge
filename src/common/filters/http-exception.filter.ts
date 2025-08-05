@@ -57,7 +57,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         return (response as any).message || exception.message;
       }
     }
-    
+
     if (exception instanceof Error) {
       return exception.message;
     }

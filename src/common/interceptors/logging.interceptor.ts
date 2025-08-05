@@ -46,13 +46,13 @@ export class LoggingInterceptor implements NestInterceptor {
 
   private sanitizeBody(body: any): any {
     if (!body) return body;
-    
+
     const sanitized = { ...body };
-    
+
     // Remove sensitive fields
     if (sanitized.senha) sanitized.senha = '[REDACTED]';
     if (sanitized.password) sanitized.password = '[REDACTED]';
-    
+
     return sanitized;
   }
 }

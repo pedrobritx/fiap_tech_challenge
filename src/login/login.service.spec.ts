@@ -24,7 +24,7 @@ describe('LoginService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-		ConfigService,
+        ConfigService,
         LoginService,
         {
           provide: UsuarioService,
@@ -61,37 +61,51 @@ describe('LoginService', () => {
       const loginDto = { email: 'test@test.com', senha: 'password' };
       const mockToken = { access_token: 'jwt-token' };
 
-      jest.spyOn(usuarioService, 'buscaUsuarioPorEmail').mockResolvedValue(mockUsuario as any);
+      jest
+        .spyOn(usuarioService, 'buscaUsuarioPorEmail')
+        .mockResolvedValue(mockUsuario as any);
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       jest.spyOn(jwtService, 'sign').mockReturnValue('jwt-token');
 
       const result = await service.login(loginDto.email, loginDto.senha);
 
-      expect(usuarioService.buscaUsuarioPorEmail).toHaveBeenCalledWith(loginDto.email);
-      expect(bcrypt.compare).toHaveBeenCalledWith(loginDto.senha, mockUsuario.senha);
-      expect(jwtService.sign).toHaveBeenCalledWith({
-		usuario: mockUsuario.nome,
-        sub: mockUsuario.id,
-        email: mockUsuario.email,
-      },
-	  {secret: 'test-secret' });
+      expect(usuarioService.buscaUsuarioPorEmail).toHaveBeenCalledWith(
+        loginDto.email,
+      );
+      expect(bcrypt.compare).toHaveBeenCalledWith(
+        loginDto.senha,
+        mockUsuario.senha,
+      );
+      expect(jwtService.sign).toHaveBeenCalledWith(
+        {
+          usuario: mockUsuario.nome,
+          sub: mockUsuario.id,
+          email: mockUsuario.email,
+        },
+        { secret: 'test-secret' },
+      );
       expect(result.token).toEqual(mockToken.access_token);
     });
 
     it('should throw UnauthorizedException with invalid email', async () => {
       const loginDto = { email: 'invalid@test.com', senha: 'password' };
 
-      await expect(service.login(loginDto.email,loginDto.senha)).rejects.toThrow(UnauthorizedException);
-
+      await expect(
+        service.login(loginDto.email, loginDto.senha),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException with invalid password', async () => {
       const loginDto = { email: 'test@test.com', senha: 'wrongpassword' };
 
-      jest.spyOn(usuarioService, 'buscaUsuarioPorEmail').mockResolvedValue(mockUsuario as any);
+      jest
+        .spyOn(usuarioService, 'buscaUsuarioPorEmail')
+        .mockResolvedValue(mockUsuario as any);
       (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
-      await expect(service.login(loginDto.email,loginDto.senha)).rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login(loginDto.email, loginDto.senha),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

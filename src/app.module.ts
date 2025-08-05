@@ -11,23 +11,23 @@ import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
-		ConfigModule.forRoot({isGlobal: true}),
-		TypeOrmModule.forRootAsync({
-			useClass: PostgresConfigService,
-			inject: [PostgresConfigService]
-		}),
-		JwtModule.registerAsync({
-			imports: [ConfigModule],
-			inject: [ConfigService],
-			useFactory: (configService: ConfigService) => ({
-				secret: configService.get<string>('JWT_SECRET'),
-				signOptions: {expiresIn: '30m'}
-			}),
-			global: true,
-		}),
-		UsuarioModule,
-		LoginModule,
-		PostModule
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      useClass: PostgresConfigService,
+      inject: [PostgresConfigService],
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '30m' },
+      }),
+      global: true,
+    }),
+    UsuarioModule,
+    LoginModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
