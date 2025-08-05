@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20-alpine3.19 AS builder
+FROM node:20-alpine3.20 AS builder
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ RUN npm run build
 RUN npx typeorm-ts-node-commonjs migration:run -d dist/src/db/data-source-cli.js
 
 # Production stage
-FROM node:20-alpine3.19 AS production
+FROM node:20-alpine3.20 AS production
 
 WORKDIR /app
 
