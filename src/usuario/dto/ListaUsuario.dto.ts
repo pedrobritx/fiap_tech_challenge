@@ -3,7 +3,7 @@ export class ListaUsuarioDTO {
 		readonly id: string,
 		readonly nome: string,
 		readonly email: string,
-		readonly createdAt: string,
-		readonly updatedAt: string
+		readonly createdAt: Date,
+		readonly updatedAt: Date
 	) {}
 }
