@@ -19,8 +19,6 @@ COPY . .
 
 # Build the application
 RUN npm run build
-# Apply pending migrations during the build so the image starts ready.
-RUN npx typeorm-ts-node-commonjs migration:run -d dist/src/db/data-source-cli.js
 
 # Production stage
 FROM node:20-alpine3.20 AS production
@@ -55,4 +53,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 # Start the application
 ENTRYPOINT ["dumb-init", "--"]
-CMD ["node", "dist/main.js"]
+CMD ["sh", "-c", "npx typeorm migration:run -d dist/src/db/data-source-cli.js || true && node dist/src/main.js"]
